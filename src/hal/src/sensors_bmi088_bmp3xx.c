@@ -46,6 +46,7 @@
 #include "ledseq.h"
 #include "sound.h"
 #include "filter.h"
+#include "notchfilter.h"
 #include "i2cdev.h"
 #include "bmi088.h"
 #include "bmp3.h"
@@ -146,6 +147,29 @@ static void applyAxis3fLpf(lpf2pData *data, Axis3f* in);
 
 static bool isBarometerPresent = false;
 static uint8_t baroMeasDelayMin = SENSORS_DELAY_BARO;
+
+// Notch filtering
+static bool enablegyroNF  = GYRO_NF_ENABLE;
+
+NotchData gyroxNF = {
+  .peak = GYRO_X_NF_PEAK_FREQ,
+  .bw   = GYRO_X_NF_BANDWIDTH,
+};
+
+NotchData gyroyNF = {
+  .peak = GYRO_Y_NF_PEAK_FREQ,
+  .bw   = GYRO_Y_NF_BANDWIDTH,
+};
+
+NotchData gyrozNF = {
+  .peak = GYRO_Z_NF_PEAK_FREQ,
+  .bw   = GYRO_Z_NF_BANDWIDTH,
+};
+
+static void applygroxNF(NotchData *data, Axis3f* in);
+static void applygroyNF(NotchData *data, Axis3f* in);
+static void applygrozNF(NotchData *data, Axis3f* in);
+
 
 // IMU alignment Euler angles
 static float imuPhi = IMU_PHI;
@@ -327,6 +351,13 @@ static void sensorsTask(void *param)
       measurement.type = MeasurementTypeGyroscope;
       measurement.data.gyroscope.gyro = sensorData.gyro;
       estimatorEnqueue(&measurement);
+
+      /* Gyro notch filtering*/
+      if (enablegyroNF) {
+        applygroxNF((NotchData*)(&gyroxNF), &sensorData.gyro);
+        applygroyNF((NotchData*)(&gyroyNF), &sensorData.gyro);
+        applygrozNF((NotchData*)(&gyrozNF), &sensorData.gyro);
+      }
 
       /* Acelerometer */
       accScaledIMU.x = accelRaw.x * SENSORS_BMI088_G_PER_LSB_CFG / accScale;
@@ -540,6 +571,13 @@ static void sensorsDeviceInit(void)
   {
     lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
     lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
+  }
+
+  // Init notch filter for Gyro
+  if (enablegyroNF) {
+    NotchInit(&gyroxNF, SENSORS_READ_RATE_HZ, gyroxNF.peak, gyroxNF.bw);
+    NotchInit(&gyroyNF, SENSORS_READ_RATE_HZ, gyroyNF.peak, gyroyNF.bw);
+    NotchInit(&gyrozNF, SENSORS_READ_RATE_HZ, gyrozNF.peak, gyrozNF.bw);
   }
 
   cosPitch = cosf(configblockGetCalibPitch() * (float) M_PI / 180);
@@ -987,6 +1025,21 @@ static void applyAxis3fLpf(lpf2pData *data, Axis3f* in)
   }
 }
 
+static void applygroxNF(NotchData *data, Axis3f* in)
+{
+  in->x = NotchApply(data, in->x);
+
+}
+static void applygroyNF(NotchData *data, Axis3f* in)
+{
+  in->y = NotchApply(data, in->y);
+}
+
+static void applygrozNF(NotchData *data, Axis3f* in)
+{
+  in->z = NotchApply(data, in->z);
+}
+
 void sensorsBmi088Bmp3xxDataAvailableCallback(void)
 {
   portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -1007,6 +1060,9 @@ LOG_ADD(LOG_INT16, zRaw, &gyroRaw.z)
 LOG_ADD(LOG_FLOAT, xVariance, &gyroBiasRunning.variance.x)
 LOG_ADD(LOG_FLOAT, yVariance, &gyroBiasRunning.variance.y)
 LOG_ADD(LOG_FLOAT, zVariance, &gyroBiasRunning.variance.z)
+LOG_ADD(LOG_FLOAT, xNF, &sensorData.gyroNF.x)
+LOG_ADD(LOG_FLOAT, yNF, &sensorData.gyroNF.y)
+LOG_ADD(LOG_FLOAT, zNF, &sensorData.gyroNF.z)
 LOG_GROUP_STOP(gyro)
 #endif
 
@@ -1033,3 +1089,36 @@ PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, imuTheta, &imuTheta)
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, imuPsi, &imuPsi)
 
 PARAM_GROUP_STOP(imu_sensors)
+
+
+PARAM_GROUP_START(gyro_notch)
+/**
+ * @brief Notchfilter enable
+ */
+PARAM_ADD(PARAM_INT8 | PARAM_PERSISTENT, NF_enable, &enablegyroNF)
+/**
+ * @brief Notchfilter Peak frequency for the x-axis gyro (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, NF_peak_x, &gyroxNF.peak)
+/**
+ * @brief Notchfilter Bandwidth frequency for the x-axis gyro (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, NF_bw_x, &gyroxNF.bw)
+/**
+ * @brief Notchfilter Peak frequency for the y-axis gyro (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, NF_peak_y, &gyroyNF.peak)
+/**
+ * @brief Notchfilter Bandwidth frequency for the y-axis gyro (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, NF_bw_y, &gyroyNF.bw)
+/**
+ * @brief Notchfilter Peak frequency for the z-axis gyro (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, NF_peak_z, &gyrozNF.peak)
+
+/**
+ * @brief Notchfilter Bandwidth frequency for the z-axis gyro (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, NF_bw_z, &gyrozNF.bw)
+PARAM_GROUP_STOP(gyro_notch)

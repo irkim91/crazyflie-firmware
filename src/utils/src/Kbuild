@@ -7,7 +7,8 @@ obj-y += debug.o
 obj-y += eprintf.o
 obj-y += buf2buf.o
 
-obj-y += filter.o
+obj-y += filter.
+obj-y += notchfilter.o
 obj-y += FreeRTOS-openocd.o
 
 obj-y += num.o

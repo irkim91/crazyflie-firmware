@@ -124,6 +124,18 @@
 #define PID_POS_VEL_Y_MAX 2.0f
 #define PID_POS_VEL_Z_MAX 1.0f
 
+// Gyro notch filter configuration
+#define GYRO_NF_ENABLE true
+
+#define GYRO_X_NF_PEAK_FREQ 28.0f
+#define GYRO_X_NF_BANDWIDTH 0.5f
+
+#define GYRO_Y_NF_PEAK_FREQ 12.2f
+#define GYRO_Y_NF_BANDWIDTH 0.5f
+
+#define GYRO_Z_NF_PEAK_FREQ 28.0f
+#define GYRO_Z_NF_BANDWIDTH 0.5f
+
 // PID filter configuration
 #define ATTITUDE_ROLL_RATE_LPF_CUTOFF_FREQ 20.0f
 #define ATTITUDE_PITCH_RATE_LPF_CUTOFF_FREQ 20.0f
