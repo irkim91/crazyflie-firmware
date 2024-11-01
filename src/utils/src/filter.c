@@ -88,7 +88,7 @@ float lpf1pApply(lpf1pData* lpf1Data, float sample)
 float lpf1pReset(lpf1pData* lpf1Data, float sample)
 {
   lpf1Data->filter_state = sample;
-  return lpf1pApply(data,sample);
+  return lpf1pApply(lpf1Data, sample);
 }
 
 /**

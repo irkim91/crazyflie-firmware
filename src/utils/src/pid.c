@@ -33,8 +33,8 @@
 
 void pidInit(PidObject* pid, const float desired, const float kp,
              const float ki, const float kd, const float kff, const float dt,
-             const float samplingRate, const float cutoffFreq, const float cutoffFreq,
-             bool enableDFilter boll enableTfilter)
+             const float samplingRate, const float cutoffFreq, const float cutoffFreqT,
+             bool enableDFilter, bool enableTfilter)
 {
   pid->error         = 0;
   pid->prevMeasured  = 0;
@@ -49,14 +49,14 @@ void pidInit(PidObject* pid, const float desired, const float kp,
   pid->outputLimit   = DEFAULT_PID_OUTPUT_LIMIT;
   pid->dt            = dt;
   pid->enableDFilter = enableDFilter;
-  pid->enalbeTFilter = enableTFilter;
+  pid->enalbeTFilter = enableTfilter;
   if (pid->enableDFilter)
   {
     lpf2pInit(&pid->dFilter, samplingRate, cutoffFreq);
   }
   if (pid->enableTFilter)
   {
-    lpf1pInit(&pid->TFilter, samplingRate, cutoffFreq);
+    lpf1pInit(&pid->TFilter, samplingRate, cutoffFreqT);
   }
 }
 
@@ -220,6 +220,6 @@ void filterReset(PidObject* pid, const float samplingRate, const float cutoffFre
   }
   if (pid->enableTFilter)
   {
-    lpf1pInit(&pid->TFilter, samplingRate, cutoffFreq);
+    lpf1pInit(&pid->TFilter, samplingRate, cutoffFreqT);
   }
 }
