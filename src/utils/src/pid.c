@@ -33,8 +33,8 @@
 
 void pidInit(PidObject* pid, const float desired, const float kp,
              const float ki, const float kd, const float kff, const float dt,
-             const float samplingRate, const float cutoffFreq,
-             bool enableDFilter)
+             const float samplingRate, const float cutoffFreq, const float cutoffFreq,
+             bool enableDFilter boll enableTfilter)
 {
   pid->error         = 0;
   pid->prevMeasured  = 0;
@@ -49,9 +49,14 @@ void pidInit(PidObject* pid, const float desired, const float kp,
   pid->outputLimit   = DEFAULT_PID_OUTPUT_LIMIT;
   pid->dt            = dt;
   pid->enableDFilter = enableDFilter;
+  pid->enalbeTFilter = enableTFilter;
   if (pid->enableDFilter)
   {
     lpf2pInit(&pid->dFilter, samplingRate, cutoffFreq);
+  }
+  if (pid->enableTFilter)
+  {
+    lpf1pInit(&pid->TFilter, samplingRate, cutoffFreq);
   }
 }
 
@@ -138,6 +143,10 @@ float pidUpdate(PidObject* pid, const float measured, const bool isYawAngle)
   {
     output = constrain(output, -pid->outputLimit, pid->outputLimit);
   }
+  if (pid->enableDFilter)
+  {
+    output = lpf1pApply(&pid->TFilter, output);
+  }
 
   pid->prevMeasured = measured;
 
@@ -202,10 +211,15 @@ void pidSetDt(PidObject* pid, const float dt) {
     pid->dt = dt;
 }
 
-void filterReset(PidObject* pid, const float samplingRate, const float cutoffFreq, bool enableDFilter) {
+void filterReset(PidObject* pid, const float samplingRate, const float cutoffFreq, bool enableDFilter, const float cutoffFreqT, bool enableTFilter) {
   pid->enableDFilter = enableDFilter;
+  pid->enableTFilter = enableTFilter;
   if (pid->enableDFilter)
   {
     lpf2pInit(&pid->dFilter, samplingRate, cutoffFreq);
+  }
+  if (pid->enableTFilter)
+  {
+    lpf1pInit(&pid->TFilter, samplingRate, cutoffFreq);
   }
 }

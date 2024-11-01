@@ -76,6 +76,12 @@
 #ifndef ATTITUDE_LPF_ENABLE
     #define ATTITUDE_LPF_ENABLE false
 #endif
+#ifndef ATTITUDE_TARGET_LPF_CUTOFF_FREQ 
+    #define ATTITUDE_TARGET_LPF_CUTOFF_FREQ      10.0f
+#endif
+#ifndef ATTITUDE_TARGET_LPF_ENABLE
+    #define ATTITUDE_TARGET_LPF_ENABLE false
+#endif
 #ifndef ATTITUDE_ROLL_RATE_LPF_CUTOFF_FREQ
     #define ATTITUDE_ROLL_RATE_LPF_CUTOFF_FREQ 30.0f
 #endif
@@ -87,6 +93,12 @@
 #endif
 #ifndef ATTITUDE_RATE_LPF_ENABLE
     #define ATTITUDE_RATE_LPF_ENABLE false
+#endif
+#ifndef ATTITUDE_RATE_TARGET_LPF_CUTOFF_FREQ 
+    #define ATTITUDE_RATE_TARGET_LPF_CUTOFF_FREQ      10.0f
+#endif
+#ifndef ATTITUDE_RATE_TARGET_LPF_ENABLE
+    #define ATTITUDE_RATE_TARGET_LPF_ENABLE false
 #endif
 #ifndef ATTITUDE_RATE_FF_YAW
     #define ATTITUDE_RATE_FF_YAW 0.0f
@@ -107,6 +119,12 @@
 #ifndef PID_POS_Z_FILT_CUTOFF
     #define PID_POS_Z_FILT_CUTOFF 20.0f
 #endif
+#ifndef PID_POS_TARGET_FILT_CUTOFF 
+    #define PID_POS_TARGET_FILT_CUTOFF      10.0f
+#endif
+#ifndef PID_POS_TARGET_FILT_ENABLE
+    #define PID_POS_TARGET_FILT_ENABLE false
+#endif
 #ifndef PID_VEL_XY_FILT_ENABLE
     #define PID_VEL_XY_FILT_ENABLE true
 #endif
@@ -122,7 +140,12 @@
 #ifndef PID_VEL_Z_FILT_CUTOFF_BARO_Z_HOLD
     #define PID_VEL_Z_FILT_CUTOFF_BARO_Z_HOLD 0.7f
 #endif
-
+#ifndef PID_VEL_TARGET_FILT_CUTOFF 
+    #define PID_VEL_TARGET_FILT_CUTOFF      10.0f
+#endif
+#ifndef PID_VEL_TARGET_FILT_ENABLE
+    #define PID_VEL_TARGET_FILT_ENABLE false
+#endif
 // Tumble detection settings
 #ifndef SUPERVISOR_TUMBLE_CHECK_ENABLE
     #define SUPERVISOR_TUMBLE_CHECK_ENABLE true

@@ -54,6 +54,8 @@ typedef struct
   float dt;           //< delta-time dt
   lpf2pData dFilter;  //< filter for D term
   bool enableDFilter; //< filter for D term enable flag
+  lpf1pData TFilter;  //< filter for D term
+  bool enableTFilter; //< filter for D term enable flag
 } PidObject;
 
 /**
@@ -69,11 +71,13 @@ typedef struct
  * @param[in] samplingRate Frequency the update will be called
  * @param[in] cutoffFreq   Frequency to set the low pass filter cutoff at
  * @param[in] enableDFilter Enable setting for the D lowpass filter
+ * @param[in] cutoffFreqT   Frequency to set the Target low pass filter cutoff at
+ * @param[in] enableTFilter Enable setting for the T lowpass filter
  */
  void pidInit(PidObject* pid, const float desired, const float kp,
               const float ki, const float kd, const float kff, const float dt,
-              const float samplingRate, const float cutoffFreq,
-              bool enableDFilter);
+              const float samplingRate, const float cutoffFreq,  const float cutoffFreqT,
+              bool enableDFilter, bool enableTFilter);
 
 /**
  * Set the integral limit for this PID in deg.
@@ -168,7 +172,9 @@ void pidSetDt(PidObject* pid, const float dt);
  * @param[in] samplingRate Frequency the update will be called
  * @param[in] cutoffFreq   Frequency to set the low pass filter cutoff at
  * @param[in] enableDFilter Enable setting for the D lowpass filter
+ * @param[in] cutoffFreqT   Frequency to set the Target low pass filter cutoff at
+ * @param[in] enableTFilter Enable setting for the T lowpass filter
 */
-void filterReset(PidObject* pid, const float samplingRate, const float cutoffFreq, bool enableDFilter);
+void filterReset(PidObject* pid, const float samplingRate, const float cutoffFreq, bool enableDFilter, const float cutoffFreqT, bool enableTFilter);
 
 #endif /* PID_H_ */

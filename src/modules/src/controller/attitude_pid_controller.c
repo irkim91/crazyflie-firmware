@@ -36,11 +36,15 @@
 
 
 static bool attFiltEnable = ATTITUDE_LPF_ENABLE;
+static bool attTFiltEnable = ATTITUDE_TARGET_LPF_ENABLE;
 static bool rateFiltEnable = ATTITUDE_RATE_LPF_ENABLE;
+static bool rateTFiltEnable = ATTITUDE_RATE_TARGET_LPF_ENABLE;
 static float attFiltCutoff = ATTITUDE_LPF_CUTOFF_FREQ;
+static float attTFiltCutoff = ATTITUDE_TARGET_LPF_CUTOFF_FREQ;
 static float omxFiltCutoff = ATTITUDE_ROLL_RATE_LPF_CUTOFF_FREQ;
 static float omyFiltCutoff = ATTITUDE_PITCH_RATE_LPF_CUTOFF_FREQ;
 static float omzFiltCutoff = ATTITUDE_YAW_RATE_LPF_CUTOFF_FREQ;
+static float rateTFiltCutoff = ATTITUDE_RATE_TARGET_LPF_CUTOFF_FREQ;
 static float yawMaxDelta = YAW_MAX_DELTA;
 
 static inline int16_t saturateSignedInt16(float in)
@@ -109,22 +113,22 @@ void attitudeControllerInit(const float updateDt)
 
   //TODO: get parameters from configuration manager instead - now (partly) implemented
   pidInit(&pidRollRate,  0, pidRollRate.kp,  pidRollRate.ki,  pidRollRate.kd,
-       pidRollRate.kff,  updateDt, ATTITUDE_RATE, omxFiltCutoff, rateFiltEnable);
+       pidRollRate.kff,  updateDt, ATTITUDE_RATE, omxFiltCutoff, rateTFiltCutoff, rateFiltEnable, rateTFiltEnable);
   pidInit(&pidPitchRate, 0, pidPitchRate.kp, pidPitchRate.ki, pidPitchRate.kd,
-       pidPitchRate.kff, updateDt, ATTITUDE_RATE, omyFiltCutoff, rateFiltEnable);
+       pidPitchRate.kff, updateDt, ATTITUDE_RATE, omyFiltCutoff, rateTFiltCutoff, rateFiltEnable, rateTFiltEnable);
   pidInit(&pidYawRate,   0, pidYawRate.kp,   pidYawRate.ki,   pidYawRate.kd,
-       pidYawRate.kff,   updateDt, ATTITUDE_RATE, omzFiltCutoff, rateFiltEnable);
+       pidYawRate.kff,   updateDt, ATTITUDE_RATE, omzFiltCutoff, rateTFiltCutoff, rateFiltEnable, rateTFiltEnable);
 
   pidSetIntegralLimit(&pidRollRate,  PID_ROLL_RATE_INTEGRATION_LIMIT);
   pidSetIntegralLimit(&pidPitchRate, PID_PITCH_RATE_INTEGRATION_LIMIT);
   pidSetIntegralLimit(&pidYawRate,   PID_YAW_RATE_INTEGRATION_LIMIT);
 
   pidInit(&pidRoll,  0, pidRoll.kp,  pidRoll.ki,  pidRoll.kd,  pidRoll.kff,  updateDt,
-      ATTITUDE_RATE, attFiltCutoff, attFiltEnable);
+      ATTITUDE_RATE, attFiltCutoff, attTFiltCutoff, attFiltEnable, attTFiltEnable);
   pidInit(&pidPitch, 0, pidPitch.kp, pidPitch.ki, pidPitch.kd, pidPitch.kff, updateDt,
-      ATTITUDE_RATE, attFiltCutoff, attFiltEnable);
+      ATTITUDE_RATE, attFiltCutoff, attTFiltCutoff, attFiltEnable, attTFiltEnable);
   pidInit(&pidYaw,   0, pidYaw.kp,   pidYaw.ki,   pidYaw.kd,   pidYaw.kff,   updateDt,
-      ATTITUDE_RATE, attFiltCutoff, attFiltEnable);
+      ATTITUDE_RATE, attFiltCutoff, attTFiltCutoff, attFiltEnable, attTFiltEnable);
 
   pidSetIntegralLimit(&pidRoll,  PID_ROLL_INTEGRATION_LIMIT);
   pidSetIntegralLimit(&pidPitch, PID_PITCH_INTEGRATION_LIMIT);

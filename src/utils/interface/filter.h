@@ -33,6 +33,12 @@
 int16_t iirLPFilterSingle(int32_t in, int32_t attenuation,  int32_t* filt);
 
 typedef struct {
+  float alpha;
+  float filter_state;
+  float cutoff_freq;
+} lpf1pData;
+
+typedef struct {
   float a1;
   float a2;
   float b0;
@@ -41,6 +47,11 @@ typedef struct {
   float delay_element_1;
   float delay_element_2;
 } lpf2pData;
+
+void lpf1pInit(lpf1pData* lpf1Data, float sample_freq, float cutoff_freq);
+void lpf1pSetCutoffFreq(lpf1pData* lpf1Data, float sample_freq, float cutoff_freq);
+float lpf1pApply(lpf1pData* lpf1Data, float sample);
+float lpf1pReset(lpf1pData* lpf1Data, float sample);
 
 void lpf2pInit(lpf2pData* lpfData, float sample_freq, float cutoff_freq);
 void lpf2pSetCutoffFreq(lpf2pData* lpfData, float sample_freq, float cutoff_freq);

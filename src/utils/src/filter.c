@@ -60,6 +60,38 @@ int16_t iirLPFilterSingle(int32_t in, int32_t attenuation,  int32_t* filt)
 }
 
 /**
+ * 1-Pole low pass filter
+ */
+void lpf1pInit(lpf1pData* lpf1Data, float sample_freq, float cutoff_freq)
+{
+  if (lpf1Data == NULL || cutoff_freq <= 0.0f) {
+    return;
+  }
+
+  lpf1pSetCutoffFreq(lpf1Data, sample_freq, cutoff_freq);
+}
+
+void lpf1pSetCutoffFreq(lpf1pData* lpf1Data, float sample_freq, float cutoff_freq)
+{
+  float time_constant = 1.0f / (2.0f * M_1_PI_F * cutoff_freq);
+  lpf1Data->alpha = sample_freq / (time_constant + sample_freq);
+  lpf1Data->filter_state = 0.0f;
+  lpf1Data->cutoff_freq = cutoff_freq;
+}
+
+float lpf1pApply(lpf1pData* lpf1Data, float sample)
+{
+  lpf1Data->filter_state += lpf1Data->alpha * (sample - lpf1Data->filter_state);
+  return lpf1Data->filter_state;
+}
+
+float lpf1pReset(lpf1pData* lpf1Data, float sample)
+{
+  lpf1Data->filter_state = sample;
+  return lpf1pApply(data,sample);
+}
+
+/**
  * 2-Pole low pass filter
  */
 void lpf2pInit(lpf2pData* lpfData, float sample_freq, float cutoff_freq)

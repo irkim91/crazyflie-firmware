@@ -71,12 +71,16 @@ static const float thrustScale = 1000.0f;
 
 #define DT (float)(1.0f/POSITION_RATE)
 static bool posFiltEnable = PID_POS_XY_FILT_ENABLE;
+static bool posTFiltEnable = PID_POS_TARGET_FILT_ENABLE;
 static bool velFiltEnable = PID_VEL_XY_FILT_ENABLE;
+static bool velTFiltEnable = PID_VEL_TARGET_FILT_ENABLE;
 static float posFiltCutoff = PID_POS_XY_FILT_CUTOFF;
 static float velFiltCutoff = PID_VEL_XY_FILT_CUTOFF;
 static bool posZFiltEnable = PID_POS_Z_FILT_ENABLE;
 static bool velZFiltEnable = PID_VEL_Z_FILT_ENABLE;
 static float posZFiltCutoff = PID_POS_Z_FILT_CUTOFF;
+static float velTFiltCutoff = PID_VEL_TARGET_FILT_CUTOFF;
+
 #if CONFIG_CONTROLLER_PID_IMPROVED_BARO_Z_HOLD
 static float velZFiltCutoff = PID_VEL_Z_FILT_CUTOFF_BARO_Z_HOLD;
 #else
@@ -166,18 +170,18 @@ static struct this_s this = {
 void positionControllerInit()
 {
   pidInit(&this.pidX.pid, this.pidX.setpoint, this.pidX.pid.kp, this.pidX.pid.ki, this.pidX.pid.kd,
-      this.pidX.pid.kff, this.pidX.pid.dt, POSITION_RATE, posFiltCutoff, posFiltEnable);
+      this.pidX.pid.kff, this.pidX.pid.dt, POSITION_RATE, posFiltCutoff, posTFiltCutoff, posFiltEnable, posTFiltEnable);
   pidInit(&this.pidY.pid, this.pidY.setpoint, this.pidY.pid.kp, this.pidY.pid.ki, this.pidY.pid.kd,
-      this.pidY.pid.kff, this.pidY.pid.dt, POSITION_RATE, posFiltCutoff, posFiltEnable);
+      this.pidY.pid.kff, this.pidY.pid.dt, POSITION_RATE, posFiltCutoff, posTFiltCutoff, posFiltEnable, posTFiltEnable);
   pidInit(&this.pidZ.pid, this.pidZ.setpoint, this.pidZ.pid.kp, this.pidZ.pid.ki, this.pidZ.pid.kd,
-      this.pidZ.pid.kff, this.pidZ.pid.dt, POSITION_RATE, posZFiltCutoff, posZFiltEnable);
+      this.pidZ.pid.kff, this.pidZ.pid.dt, POSITION_RATE, posZFiltCutoff, posTFiltCutoff, posZFiltEnable, posTFiltEnable);
 
   pidInit(&this.pidVX.pid, this.pidVX.setpoint, this.pidVX.pid.kp, this.pidVX.pid.ki, this.pidVX.pid.kd,
-      this.pidVX.pid.kff, this.pidVX.pid.dt, POSITION_RATE, velFiltCutoff, velFiltEnable);
+      this.pidVX.pid.kff, this.pidVX.pid.dt, POSITION_RATE, velFiltCutoff, velTFiltCutoff, velFiltEnable, velTFiltEnable);
   pidInit(&this.pidVY.pid, this.pidVY.setpoint, this.pidVY.pid.kp, this.pidVY.pid.ki, this.pidVY.pid.kd,
-      this.pidVY.pid.kff, this.pidVY.pid.dt, POSITION_RATE, velFiltCutoff, velFiltEnable);
+      this.pidVY.pid.kff, this.pidVY.pid.dt, POSITION_RATE, velFiltCutoff, velTFiltCutoff, velFiltEnable, velTFiltEnable);
   pidInit(&this.pidVZ.pid, this.pidVZ.setpoint, this.pidVZ.pid.kp, this.pidVZ.pid.ki, this.pidVZ.pid.kd,
-      this.pidVZ.pid.kff, this.pidVZ.pid.dt, POSITION_RATE, velZFiltCutoff, velZFiltEnable);
+      this.pidVZ.pid.kff, this.pidVZ.pid.dt, POSITION_RATE, velZFiltCutoff, velTFiltCutoff, velZFiltEnable, velTFiltEnable);
 }
 
 static float runPid(float input, struct pidAxis_s *axis, float setpoint, float dt) {

@@ -108,6 +108,7 @@ void controllerPid(control_t *control, const setpoint_t *setpoint,
                                 attitudeDesired.roll, attitudeDesired.pitch, attitudeDesired.yaw,
                                 &rateDesired.roll, &rateDesired.pitch, &rateDesired.yaw);
 
+    
     // For roll and pitch, if velocity mode, overwrite rateDesired with the setpoint
     // value. Also reset the PID to avoid error buildup, which can lead to unstable
     // behavior if level mode is engaged later
