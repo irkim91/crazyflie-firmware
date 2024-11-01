@@ -144,6 +144,17 @@
 #define PID_VEL_XY_FILT_CUTOFF 10.0f
 #define PID_VEL_Z_FILT_CUTOFF 10.0f
 
+// PID Target filter configuration
+#define PID_POS_TARGET_FILT_ENABLE false
+#define PID_VEL_TARGET_FILT_ENABLE false
+#define ATTITUDE_Target_LPF_ENABLE true
+#define ATTITUDE_RATE_Target_LPF_ENABLE false
+
+#define PID_POS_TARGET_FILT_CUTOFF              10.0f
+#define PID_VEL_TARGET_FILT_CUTOFF              10.0f
+#define ATTITUDE_TARGET_LPF_CUTOFF_FREQ         10.0f
+#define ATTITUDE_RATE_TARGET_LPF_CUTOFF_FREQ    10.0f
+
 // IMU alignment
 //////////////////////////////////
 #if CONFIG_POWER_DISTRIBUTION_FLAPPER_REVB
