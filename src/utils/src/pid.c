@@ -143,7 +143,7 @@ float pidUpdate(PidObject* pid, const float measured, const bool isYawAngle)
   {
     output = constrain(output, -pid->outputLimit, pid->outputLimit);
   }
-  if (pid->enableDFilter)
+  if (pid->enableTFilter)
   {
     output = lpf1pApply(&pid->TFilter, output);
   }
