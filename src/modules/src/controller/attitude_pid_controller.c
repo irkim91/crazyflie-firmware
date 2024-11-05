@@ -377,9 +377,17 @@ PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, yawMaxDelta, &yawMaxDelta)
  */
 PARAM_ADD(PARAM_INT8 | PARAM_PERSISTENT, attFiltEn, &attFiltEnable)
 /**
+ * @brief Target Low pass filter enable
+ */
+PARAM_ADD(PARAM_INT8 | PARAM_PERSISTENT, attTFiltEn, &attTFiltEnable)
+/**
  * @brief Low pass filter cut-off frequency (Hz)
  */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, attFiltCut, &attFiltCutoff)
+/**
+ * @brief Target Low pass filter cut-off frequency (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, attTFiltCut, &attTFiltCutoff)
 PARAM_GROUP_STOP(pid_attitude)
 
 /**
@@ -440,6 +448,10 @@ PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, yaw_kff, &pidYawRate.kff)
  */
 PARAM_ADD(PARAM_INT8 | PARAM_PERSISTENT, rateFiltEn, &rateFiltEnable)
 /**
+ * @brief Target Low pass filter enable
+ */
+PARAM_ADD(PARAM_INT8 | PARAM_PERSISTENT, rateTFiltEn, &rateTFiltEnable)
+/**
  * @brief Low pass filter cut-off frequency, roll axis (Hz)
  */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, omxFiltCut, &omxFiltCutoff)
@@ -451,4 +463,8 @@ PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, omyFiltCut, &omyFiltCutoff)
  * @brief Low pass filter cut-off frequency, yaw axis (Hz)
  */
 PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, omzFiltCut, &omzFiltCutoff)
+/**
+ * @brief Target Low pass filter cut-off frequency (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, rateTFiltCut, &rateTFiltCutoff)
 PARAM_GROUP_STOP(pid_rate)
