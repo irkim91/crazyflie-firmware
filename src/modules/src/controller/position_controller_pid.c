@@ -282,12 +282,12 @@ void positionControllerResetAllPID(float xActual, float yActual, float zActual)
 }
 
 void positionControllerResetAllfilters() {
-  filterReset(&this.pidX.pid, POSITION_RATE, posFiltCutoff, posFiltEnable);
-  filterReset(&this.pidY.pid, POSITION_RATE, posFiltCutoff, posFiltEnable);
-  filterReset(&this.pidZ.pid, POSITION_RATE, posZFiltCutoff, posZFiltEnable);
-  filterReset(&this.pidVX.pid, POSITION_RATE, velFiltCutoff, velFiltEnable);
-  filterReset(&this.pidVY.pid, POSITION_RATE, velFiltCutoff, velFiltEnable);
-  filterReset(&this.pidVZ.pid, POSITION_RATE, velZFiltCutoff, velZFiltEnable);
+  filterReset(&this.pidX.pid, POSITION_RATE, posFiltCutoff, posFiltEnable, posTFiltCutoff, posTFiltEnable);
+  filterReset(&this.pidY.pid, POSITION_RATE, posFiltCutoff, posFiltEnable, posTFiltCutoff, posTFiltEnable);
+  filterReset(&this.pidZ.pid, POSITION_RATE, posZFiltCutoff, posZFiltEnable, posTFiltCutoff, posTFiltEnable);
+  filterReset(&this.pidVX.pid, POSITION_RATE, velFiltCutoff, velFiltEnable, velTFiltCutoff, velTFiltEnable);
+  filterReset(&this.pidVY.pid, POSITION_RATE, velFiltCutoff, velFiltEnable, velTFiltCutoff, velTFiltEnable);
+  filterReset(&this.pidVZ.pid, POSITION_RATE, velZFiltCutoff, velZFiltEnable, velTFiltCutoff, velTFiltEnable);
 }
 
 /**
