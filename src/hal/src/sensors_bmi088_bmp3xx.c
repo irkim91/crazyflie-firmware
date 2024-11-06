@@ -139,8 +139,10 @@ static bool accScaleFound = false;
 static uint32_t accScaleSumCount = 0;
 
 // Low Pass filtering
-#define GYRO_LPF_CUTOFF_FREQ  80
-#define ACCEL_LPF_CUTOFF_FREQ 30
+//#define GYRO_LPF_CUTOFF_FREQ  80
+//#define ACCEL_LPF_CUTOFF_FREQ 30
+static float gyroFiltCutoff = GYRO_LPF_CUTOFF_FREQREQ;
+static float accelFiltCutoff = ACCEL_LPF_CUTOFF_FREQ;
 static lpf2pData accLpf[3];
 static lpf2pData gyroLpf[3];
 static void applyAxis3fLpf(lpf2pData *data, Axis3f* in);
@@ -569,8 +571,10 @@ static void sensorsDeviceInit(void)
   // Init second order filer for accelerometer and gyro
   for (uint8_t i = 0; i < 3; i++)
   {
-    lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
-    lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
+    //lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
+    //lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
+    lpf2pInit(&gyroLpf[i], 1000, gyroFiltCutoff);
+    lpf2pInit(&accLpf[i],  1000, accelFiltCutoff);    
   }
 
   // Init notch filter for Gyro
@@ -1012,7 +1016,8 @@ void sensorsBmi088Bmp3xxSetAccMode(accModes accMode)
       }
       for (uint8_t i = 0; i < 3; i++)
       {
-        lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
+        //lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
+        lpf2pInit(&accLpf[i],  1000, accelFiltCutoff);
       }
       break;
   }
@@ -1090,6 +1095,19 @@ PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, imuPsi, &imuPsi)
 
 PARAM_GROUP_STOP(imu_sensors)
 
+PARAM_GROUP_START(imu_lpf)
+
+/**
+ * @brief Gyro Low pass filter cut-off frequency (Hz)
+ */
+PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, GyroFiltCut, &gyroFiltCutoff)
+
+/**
+ * @brief Accel Low pass filter cut-off frequency (Hz)
+ */
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, AccFiltCut, &accelFiltCutoff)
+
+PARAM_GROUP_STOP(imu_lpf)
 
 PARAM_GROUP_START(gyro_notch)
 /**
