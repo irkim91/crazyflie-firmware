@@ -130,10 +130,8 @@ static float accScaleSum = 0;
 static float accScale = 1;
 
 // Low Pass filtering
-//#define GYRO_LPF_CUTOFF_FREQ  80
-//#define ACCEL_LPF_CUTOFF_FREQ 30
-static float gyroFiltCutoff = GYRO_LPF_CUTOFF_FREQ;
-static float accelFiltCutoff = ACCEL_LPF_CUTOFF_FREQ;
+#define GYRO_LPF_CUTOFF_FREQ  80
+#define ACCEL_LPF_CUTOFF_FREQ 30
 static lpf2pData accLpf[3];
 static lpf2pData gyroLpf[3];
 static void applyAxis3fLpf(lpf2pData *data, Axis3f* in);
@@ -399,10 +397,8 @@ static void sensorsDeviceInit(void)
   // Init second order filer for accelerometer
   for (uint8_t i = 0; i < 3; i++)
   {
-    //lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
-    //lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
-    lpf2pInit(&gyroLpf[i], 1000, gyroFiltCutoff);
-    lpf2pInit(&accLpf[i],  1000, accelFiltCutoff); 
+    lpf2pInit(&gyroLpf[i], 1000, GYRO_LPF_CUTOFF_FREQ);
+    lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
   }
 
 #ifdef SENSORS_ENABLE_MAG_AK8963
@@ -940,8 +936,7 @@ void sensorsMpu9250Lps25hSetAccMode(accModes accMode)
       mpu6500SetAccelDLPF(MPU6500_ACCEL_DLPF_BW_41);
       for (uint8_t i = 0; i < 3; i++)
       {
-        //lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
-        lpf2pInit(&accLpf[i],  1000, accelFiltCutoff);
+        lpf2pInit(&accLpf[i],  1000, ACCEL_LPF_CUTOFF_FREQ);
       }
       break;
   }
@@ -984,20 +979,6 @@ PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, AK8963, &isMagnetometerPresent)
 PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, LPS25H, &isBarometerPresent)
 
 PARAM_GROUP_STOP(imu_sensors)
-
-PARAM_GROUP_START(imu_lpf)
-
-/**
- * @brief Gyro Low pass filter cut-off frequency (Hz)
- */
-PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, GyroFiltCut, &gyroFiltCutoff)
-
-/**
- * @brief Accel Low pass filter cut-off frequency (Hz)
- */
-PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, AccFiltCut, &accelFiltCutoff)
-
-PARAM_GROUP_STOP(imu_lpf)
 
 PARAM_GROUP_START(imu_tests)
 

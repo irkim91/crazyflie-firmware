@@ -139,8 +139,6 @@ static bool accScaleFound = false;
 static uint32_t accScaleSumCount = 0;
 
 // Low Pass filtering
-//#define GYRO_LPF_CUTOFF_FREQ  80
-//#define ACCEL_LPF_CUTOFF_FREQ 30
 static float gyroFiltCutoff = GYRO_LPF_CUTOFF_FREQ;
 static float accelFiltCutoff = ACCEL_LPF_CUTOFF_FREQ;
 static lpf2pData accLpf[3];
@@ -1100,7 +1098,7 @@ PARAM_GROUP_START(imu_lpf)
 /**
  * @brief Gyro Low pass filter cut-off frequency (Hz)
  */
-PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, GyroFiltCut, &gyroFiltCutoff)
+PARAM_ADD(PARAM_FLOAT | PARAM_PERSISTENT, GyroFiltCut, &gyroFiltCutoff)
 
 /**
  * @brief Accel Low pass filter cut-off frequency (Hz)
