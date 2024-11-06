@@ -141,7 +141,7 @@ static uint32_t accScaleSumCount = 0;
 // Low Pass filtering
 //#define GYRO_LPF_CUTOFF_FREQ  80
 //#define ACCEL_LPF_CUTOFF_FREQ 30
-static float gyroFiltCutoff = GYRO_LPF_CUTOFF_FREQREQ;
+static float gyroFiltCutoff = GYRO_LPF_CUTOFF_FREQ;
 static float accelFiltCutoff = ACCEL_LPF_CUTOFF_FREQ;
 static lpf2pData accLpf[3];
 static lpf2pData gyroLpf[3];

@@ -69,6 +69,14 @@
     #define IMU_PSI     0.0f
 #endif
 
+// seonsors filter settings
+#ifndef GYRO_LPF_CUTOFF_FREQ 
+    #define GYRO_LPF_CUTOFF_FREQ      80.0f
+#endif
+#ifndef ACCEL_LPF_CUTOFF_FREQ 
+    #define ACCEL_LPF_CUTOFF_FREQ      30.0f
+#endif
+
 // Attitude PID control filter settings
 #ifndef ATTITUDE_LPF_CUTOFF_FREQ 
     #define ATTITUDE_LPF_CUTOFF_FREQ      15.0f
