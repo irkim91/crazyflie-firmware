@@ -171,7 +171,7 @@ void pidSetDesired(PidObject* pid, const float desired)
 }
 
 float pidGetDesired(PidObject* pid)
-{
+{ 
   return pid->desired;
 }
 

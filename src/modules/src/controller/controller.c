@@ -8,6 +8,7 @@
 #include "controller_indi.h"
 #include "controller_brescianini.h"
 #include "controller_lee.h"
+#include "controller_fuzzy.h"
 
 #include "autoconf.h"
 
@@ -30,6 +31,7 @@ static ControllerFcns controllerFunctions[] = {
   {.init = controllerINDIInit, .test = controllerINDITest, .update = controllerINDI, .name = "INDI"},
   {.init = controllerBrescianiniInit, .test = controllerBrescianiniTest, .update = controllerBrescianini, .name = "Brescianini"},
   {.init = controllerLeeFirmwareInit, .test = controllerLeeFirmwareTest, .update = controllerLeeFirmware, .name = "Lee"},
+  {.init = controllerFuzzyInit, .test = controllerFuzzyTest, .update = controllerFuzzy, .name = "Fuzzy"},
   #ifdef CONFIG_CONTROLLER_OOT
   {.init = controllerOutOfTreeInit, .test = controllerOutOfTreeTest, .update = controllerOutOfTree, .name = "OutOfTree"},
   #endif
@@ -57,6 +59,8 @@ void controllerInit(ControllerType controller) {
     #define CONTROLLER ControllerTypeBrescianini
   #elif defined(CONFIG_CONTROLLER_LEE)
     #define CONTROLLER ControllerTypeLee
+  #elif defined(CONFIG_CONTROLLER_FUZZY)
+    #define CONTROLLER ControllerTypeFuzzy
   #elif defined(CONFIG_CONTROLLER_OOT)
     #define CONTROLLER ControllerTypeOot
   #else

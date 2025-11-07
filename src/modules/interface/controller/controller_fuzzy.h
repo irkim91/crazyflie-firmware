@@ -21,41 +21,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * controller.h - Controller interface
+ * controller_pid.h - PID Controller Interface
  */
-#ifndef __CONTROLLER_H__
-#define __CONTROLLER_H__
+#ifndef __CONTROLLER_FUZZY_H__
+#define __CONTROLLER_FUZZY_H__
 
 #include "stabilizer_types.h"
 
-typedef enum {
-  ControllerTypeAutoSelect,
-  ControllerTypePID,
-  ControllerTypeMellinger,
-  ControllerTypeINDI,
-  ControllerTypeBrescianini,
-  ControllerTypeLee,
-  ControllerTypeFuzzy,
-#ifdef CONFIG_CONTROLLER_OOT
-  ControllerTypeOot,
-#endif
-  ControllerType_COUNT,
-} ControllerType;
-
-void controllerInit(ControllerType controller);
-bool controllerTest(void);
-void controller(control_t *control, const setpoint_t *setpoint,
+void controllerFuzzyInit(void);
+bool controllerFuzzyTest(void);
+void controllerFuzzy(control_t *control, const setpoint_t *setpoint,
                                          const sensorData_t *sensors,
                                          const state_t *state,
                                          const stabilizerStep_t stabilizerStep);
-ControllerType controllerGetType(void);
-const char* controllerGetName();
 
-
-#ifdef CONFIG_CONTROLLER_OOT
-void controllerOutOfTreeInit(void);
-bool controllerOutOfTreeTest(void);
-void controllerOutOfTree(control_t *control, const setpoint_t *setpoint, const sensorData_t *sensors, const state_t *state, const stabilizerStep_t stabilizerStep);
-#endif
-
-#endif //__CONTROLLER_H__
+#endif //__CONTROLLER_PID_H__
